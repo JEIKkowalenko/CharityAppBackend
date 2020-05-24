@@ -60,8 +60,8 @@ namespace CharityAppBackend.Controllers.API
                 UserName = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                EmailConfirmed = true;
-                
+                EmailConfirmed = true
+              
             };
             var result = await _userManager.CreateAsync(user, model.Password);
 
