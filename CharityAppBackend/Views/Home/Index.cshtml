@@ -1,8 +1,19 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model  IEnumerable<CharityAppBackend.Models.Post>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@foreach(var post in Model)
+{
+    <div class="card align-content-center">
+        <div class="card-img">
+            <img src="@post.ImgPath" alt="Alternate Text" />
+        </div>      
+        <div class="card-body">
+            <h2>@post.Name </h2>
+            <p>
+                @post.Description
+            </p>
+        </div>      
+    </div>
+}

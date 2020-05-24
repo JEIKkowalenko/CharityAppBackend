@@ -12,7 +12,10 @@ using CharityAppBackend.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using CharityAppBackend.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
 
 namespace CharityAppBackend
 {
@@ -35,6 +38,34 @@ namespace CharityAppBackend
                 .AddDefaultTokenProviders()
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                options.LoginPath = "/Home/Login";
+                options.AccessDeniedPath = "/Home/Login";
+                options.SlidingExpiration = true;
+            });
+
+            services.AddAuthentication()
+                .AddCookie(cfg => { cfg.SlidingExpiration = true; })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            services.AddAuthorization();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
