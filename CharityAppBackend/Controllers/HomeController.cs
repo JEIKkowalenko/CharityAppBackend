@@ -10,6 +10,7 @@ using CharityAppBackend.Data;
 using Newtonsoft.Json.Converters;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CharityAppBackend.Controllers
 {
@@ -23,7 +24,7 @@ namespace CharityAppBackend.Controllers
             _logger = logger;
             _database = database;
         }
-
+        [Authorize]
         public IActionResult Index()
         {
 

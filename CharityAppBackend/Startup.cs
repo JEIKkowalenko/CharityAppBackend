@@ -45,13 +45,22 @@ namespace CharityAppBackend
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
-                options.LoginPath = "/Home/Login";
-                options.AccessDeniedPath = "/Home/Login";
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Identity/Account/Login";
                 options.SlidingExpiration = true;
             });
 
             services.AddAuthentication()
-                .AddCookie(cfg => { cfg.SlidingExpiration = true; })
+                .AddGoogle(cfg => {
+                    IConfigurationSection googleAuthNSection =
+                        Configuration.GetSection("Authentication:Google");
+
+                    cfg.ClientId = googleAuthNSection["ClientId"];
+                    cfg.ClientSecret = googleAuthNSection["ClientSecret"];
+                })
+                .AddCookie(cfg => {
+                    cfg.SlidingExpiration = true;
+                })
                 .AddJwtBearer(cfg =>
                 {
                     cfg.RequireHttpsMetadata = false;
