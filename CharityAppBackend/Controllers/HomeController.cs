@@ -30,6 +30,17 @@ namespace CharityAppBackend.Controllers
 
             return View(_database.Posts.ToList());
         }
+        [Authorize]
+        public IActionResult Donations()
+        {
+            var donations = _database.Donates.ToList();
+            return View(donations);
+        }
+        [Authorize]
+        public IActionResult DonationScore()
+        {
+            return View();
+        }
 
         public IActionResult Privacy()
         {
